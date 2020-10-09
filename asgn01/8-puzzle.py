@@ -47,6 +47,11 @@ class N_Puzzle:
                 for j in range(self.data.shape[1]):
                     if self.data[i][j] != 0:
                         tile = self.data[i][j]
+<<<<<<< HEAD
+=======
+                        # goal_pos = np.where(self.goal == tile)
+                        # manhattan = abs(i - int(goal_pos[0])) + abs(j - int(goal_pos[1]))
+>>>>>>> def03979afe02f7d35e098a9d5685b2cebbdf17d
                         goalPos = self.findTile(self.goal, tile)
                         manhattan = abs(i - goalPos[0]) + abs(j - goalPos[1])
                         h2 += manhattan
