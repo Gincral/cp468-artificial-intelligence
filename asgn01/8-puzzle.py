@@ -31,8 +31,26 @@ class N_Puzzle:
                 if puzzle[row][col]==tile:
                     return row,col
 
-    def calculateHeuristicCost(self):
-        print("Calculate Stuff")
+    def calculateHeuristicCost(self, heuristic):
+        if heuristic == "h1":
+            # Calculation for h1: number of misplaced tiles
+            h1 = 0
+            for i in range(self.data.shape[0]):
+                for j in range(self.data.shape[1]):
+                    if self.data[i][j] != 0 and self.data[i][j] != self.goal[i][j]:
+                        h1 += 1
+            self.h1 = h1
+        elif heuristic == "h2":
+            # Calculation for h2: Total Manhattan distance
+            h2 = 0
+            for i in range(self.data.shape[0]):
+                for j in range(self.data.shape[1]):
+                    if self.data[i][j] != 0:
+                        tile = self.data[i][j]
+                        goalPos = self.findTile(self.goal, tile)
+                        manhattan = abs(i - goalPos[0]) + abs(j - goalPos[1])
+                        h2 += manhattan
+            self.h2 = h2
 
     def generateRandomPuzzle(self):
         solvable=False
@@ -69,23 +87,36 @@ class N_Puzzle:
     def solve(self):
         print("Do Stuff")
 
-
 def main():
     size=int(sys.argv[1]) # 3, 4, 5 for 8, 15 and 24 puzzle respectively
     goal = np.reshape([*range(size*size)],(size,size))
 
     puzzle = N_Puzzle(goal,size)
-    
+
     for i in range(10):
         puzzle.generateRandomPuzzle()
+        puzzle.calculateHeuristicCost("h1")
+        puzzle.calculateHeuristicCost("h2")
         print("Puzzle #"+str(i+1))
         print(puzzle.data)
+        print("h1(S) = " + str(puzzle.h1))
+        print("h2(S) = " + str(puzzle.h2))
         puzzle.solve()
         print("\n")
         
     print("The goal state is:")
     print(goal)
-   
+
+    print('heuristic test (from lecture notes):')
+    testGoal = np.reshape([*range(3*3)],(3,3))
+    testPuzzle = N_Puzzle(testGoal, 3)
+    values = [7, 2, 4, 5, 0, 6, 8, 3, 1]
+    testPuzzle.data = np.reshape(values, (3, 3))
+    print(testPuzzle.data)
+    testPuzzle.calculateHeuristicCost("h1")
+    testPuzzle.calculateHeuristicCost("h2")
+    print("h1(S) = " + str(testPuzzle.h1))
+    print("h2(S) = " + str(testPuzzle.h2))
 
 
 if __name__ == "__main__":
