@@ -44,7 +44,7 @@ class N_Puzzle:
             moves.append([row,col+1])#not last column so column before can move in
         return moves
 
-    def slide(self, puzzle, move)
+    def slide(self, puzzle, move):
         row,col=self.findTile(puzzle,0)
         puzzle[row][col]=puzzle[move[0]][move[1]]
         puzzle[move[0]][move[1]]=0
