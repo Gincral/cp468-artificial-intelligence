@@ -31,6 +31,25 @@ class N_Puzzle:
                 if puzzle[row][col]==tile:
                     return row,col
 
+    def generateMoves(self,puzzle): #will check where empty tile is and see which directions the tiles can move from
+        moves=[]
+        row, col =self.findTile(puzzle,0)
+        if (row>0):
+            moves.append([row-1,col]) #not first row so row before can move in
+        if (row<self.size-1):
+            moves.append([rows+1,col])#not last row so row after can move in
+        if (col>0):
+            moves.append([row,col-1])#not first column so column before can move in
+        if (col<self.size-1):
+            moves.append([row,col+1])#not last column so column before can move in
+        return moves
+
+    def slide(self, puzzle, move)
+        row,col=self.findTile(puzzle,0)
+        puzzle[row][col]=puzzle[move[0]][move[1]]
+        puzzle[move[0]][move[1]]=0
+        return puzzle
+
     def calculateHeuristicCost(self, heuristic):
         if heuristic == "h1":
             # Calculation for h1: number of misplaced tiles
