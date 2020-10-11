@@ -77,6 +77,29 @@ class N_Puzzle:
                         manhattan = abs(row - goalPos[0]) + abs(col - goalPos[1])
                         h2 += manhattan
             return h2
+        elif self.heuristic == "h3":
+            # Calculation for h3: Nilsson's Sequence Score: h(n) = P(n) + 3 S(n)
+            h3 = 0
+            for row in range(len(puzzle)):
+                for col in range(len(puzzle)):
+                    if puzzle[row][col] != 0:
+                        tile = puzzle[row][col]
+                        goalPos = self.findTile(self.goal, tile)
+                        manhattan = abs(row - goalPos[0]) + abs(col - goalPos[1])
+                        h3 += manhattan
+                        if(manhattan != 0):
+                            if (len(puzzle)==3):
+                                if(row ==1 and col ==1): h3 += 3
+                                else: h3 += 6
+                            elif (len(puzzle)==4):
+                                if((row ==2 and col ==2) or (row ==1 and col ==1)): h3 += 3
+                                else: h3 += 6
+                            elif (len(puzzle)==5):
+                                if(row ==2 and col ==2): h3 += 3
+                                else: h3 += 6
+                        
+            return h3
+        
 
     def generateRandomPuzzle(self):
         solvable=False
