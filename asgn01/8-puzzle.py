@@ -78,8 +78,9 @@ class N_Puzzle:
                         h2 += manhattan
             return h2
         elif self.heuristic == "h3":
-            # Calculation for h3: Nilsson's Sequence Score: h(n) = P(n) + 3 S(n)
+            # Linear Conflict + Manhattan Distance/Taxicab geometry 
             h3 = 0
+            conflictCount = 0
             for row in range(len(puzzle)):
                 for col in range(len(puzzle)):
                     if puzzle[row][col] != 0:
@@ -87,19 +88,24 @@ class N_Puzzle:
                         goalPos = self.findTile(self.goal, tile)
                         manhattan = abs(row - goalPos[0]) + abs(col - goalPos[1])
                         h3 += manhattan
-                        if(manhattan != 0):
-                            if (len(puzzle)==3):
-                                if(row ==1 and col ==1): h3 += 3
-                                else: h3 += 6
-                            elif (len(puzzle)==4):
-                                if((row ==2 and col ==2) or (row ==1 and col ==1)): h3 += 3
-                                else: h3 += 6
-                            elif (len(puzzle)==5):
-                                if(row ==2 and col ==2): h3 += 3
-                                else: h3 += 6
-                        
+                        conflictCount += self.linearConflict([row, col], tile, puzzle, self.goal)
+                        h3 += conflictCount*2
             return h3
-        
+    
+    def linearConflict(self, tileLocation, tile, puzzel, goal):
+        conflictCount = 0
+        tileGoal = self.findTile(goal, tile)
+        if (tileLocation[0]==tileGoal[0] and (tileGoal[1]-tileLocation[1])>1):
+            for i in range(tileLocation[1]+1, tileGoal[1]):
+                target = puzzel[tileLocation[0]][i]
+                targetGoal = self.findTile(goal, target)
+                if (targetGoal[0]==tileLocation[0]): conflictCount+=1
+        elif (tileLocation[1]==tileGoal[1] and (tileGoal[0]-tileLocation[0])>1):
+            for i in range(tileLocation[0]+1, tileGoal[0]):
+                target = puzzel[i][tileLocation[1]]
+                targetGoal = self.findTile(goal, target)
+                if (targetGoal[1]==tileLocation[1]): conflictCount+=1
+        return conflictCount
 
     def generateRandomPuzzle(self):
         solvable=False
