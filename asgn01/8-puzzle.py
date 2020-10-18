@@ -184,8 +184,6 @@ def main():
     for i in range(100):
         puzzle = N_Puzzle(goal,size*size)
         puzzle.generateRandomPuzzle()
-        puzzle.calculateHeuristicCost("h1")
-        puzzle.calculateHeuristicCost("h2")
         print("Puzzle #"+str(i+1))
         print(puzzle.data)
         puzzle.setHeuristic("h1")
