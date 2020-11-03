@@ -1,15 +1,17 @@
 rows =['A','B','C','D','E','F','G','H','I']
 class AC3:
 
-    def __init__(self):
+    def __init__(self, data):
         self.values={}
         cols= [x for x in range(1,10)]
         self.variables = [row+str(col) for row in rows for col in cols]
+        i = 0
         for var in self.variables:
-            self.values[var]=[1,2,3,4,5,6,7,8,9]
-
-        self.values['A1']=[1] 
-        self.values['A2']=[2,3,4,5,6,7,8,9]
+            if data[i] == '0':
+                self.values[var]=[1,2,3,4,5,6,7,8,9]
+            else:
+                self.values[var]=[int(data[i])]
+            i += 1
 
 
 def CreateConstraints():
@@ -44,10 +46,16 @@ def CreateConstraints():
 
 
 def main():
+    # data = input("enter 81 length string: ")
+    # if len(data) != 81 or data.isdigit()==False:
+    #     print("wrong input")
+    #     return 0
+
+    data = "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
     CreateConstraints()
-    x = AC3()
+    x = AC3(data)
     print(x.variables)
-    print("A1: "+ str(x.values['A1']))
-    print("A2: "+ str(x.values['A2']))
+    print(x.values)
+
 if __name__ == "__main__":
     main()
