@@ -2,11 +2,14 @@ rows =['A','B','C','D','E','F','G','H','I']
 class AC3:
 
     def __init__(self):
-        
+        self.values={}
         cols= [x for x in range(1,10)]
         self.variables = [row+str(col) for row in rows for col in cols]
         for var in self.variables:
-            self.values={var:[1,2,3,4,5,6,7,8,9]}
+            self.values[var]=[1,2,3,4,5,6,7,8,9]
+
+        self.values['A1']=[1] 
+        self.values['A2']=[2,3,4,5,6,7,8,9]
 
 
 def CreateConstraints():
@@ -35,7 +38,7 @@ def CreateConstraints():
                     if var1!=var2 and [var1,var2] not in constraintPairs:
                         constraintPairs.append([var1,var2])
 
-    print("There are "+ str(len(constraintPairs))+ " Arcs")
+    print("There are 81 Variables.\nThere are "+ str(len(constraintPairs))+ " Arcs")
 
 
 
@@ -44,5 +47,7 @@ def main():
     CreateConstraints()
     x = AC3()
     print(x.variables)
+    print("A1: "+ str(x.values['A1']))
+    print("A2: "+ str(x.values['A2']))
 if __name__ == "__main__":
     main()
