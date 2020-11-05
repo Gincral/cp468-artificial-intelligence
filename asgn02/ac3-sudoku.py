@@ -55,15 +55,9 @@ class AC3:
         return False
 
     def printInFormat(self):
-        print(self.values['A1'],self.values['A2'],self.values['A3'],self.values['A4'],self.values['A5'],self.values['A6'],self.values['A7'],self.values['A8'],self.values['A9'],'\n')
-        print(self.values['B1'],self.values['B2'],self.values['B3'],self.values['B4'],self.values['B5'],self.values['B6'],self.values['B7'],self.values['B8'],self.values['B9'],'\n')
-        print(self.values['C1'],self.values['C2'],self.values['C3'],self.values['C4'],self.values['C5'],self.values['C6'],self.values['C7'],self.values['C8'],self.values['C9'],'\n')
-        print(self.values['D1'],self.values['D2'],self.values['D3'],self.values['D4'],self.values['D5'],self.values['D6'],self.values['D7'],self.values['D8'],self.values['D9'],'\n')
-        print(self.values['E1'],self.values['E2'],self.values['E3'],self.values['E4'],self.values['E5'],self.values['E6'],self.values['E7'],self.values['E8'],self.values['E9'],'\n')
-        print(self.values['F1'],self.values['F2'],self.values['F3'],self.values['F4'],self.values['F5'],self.values['F6'],self.values['F7'],self.values['F8'],self.values['F9'],'\n')
-        print(self.values['G1'],self.values['G2'],self.values['G3'],self.values['G4'],self.values['G5'],self.values['G6'],self.values['G7'],self.values['G8'],self.values['G9'],'\n')
-        print(self.values['H1'],self.values['H2'],self.values['H3'],self.values['H4'],self.values['H5'],self.values['H6'],self.values['H7'],self.values['H8'],self.values['H9'],'\n')
-        print(self.values['I1'],self.values['I2'],self.values['I3'],self.values['I4'],self.values['I5'],self.values['I6'],self.values['I7'],self.values['I8'],self.values['I9'],'\n')
+        for row in rows:
+            print(self.values[row+'1'],self.values[row+'2'],self.values[row+'3'],self.values[row+'4'],self.values[row+'5'],self.values[row+'6'],self.values[row+'7'],self.values[row+'8'],self.values[row+'9'],'\n')
+        
 
 def CreateConstraints():
     
@@ -109,7 +103,7 @@ def main():
     #     print("wrong input")
     #     return 0
 
-    data = "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
+    data = "000020600900005001001806400008102900700000008006708200002609500800200009005010000"
     
     x = AC3(data,CreateConstraints())
     print(x.ac3())
