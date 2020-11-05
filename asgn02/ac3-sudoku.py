@@ -30,6 +30,30 @@ class AC3:
 
         self.related_cells=related_cells
 
+    def ac3(self):
+        while len(self.binConstraints) > 0:
+            arc = self.binConstraints.pop(0)
+            x = arc[0]
+            y = arc[1]
+            if self.revise(x, y):
+                if len(self.values[x]) == 0:
+                    return False
+                for cell in self.related_cells[x]:
+                    if [cell, x] not in self.binConstraints:
+                        self.binConstraints.append([cell,x])
+        return True
+
+    def revise(self, x, y):
+        if len(self.values[y]) == 1:
+            yvalue = self.values[y]
+            try:
+                index = self.values[x].index(yvalue[0])
+                self.values[x].pop(index)
+                return True
+            except:
+                return False
+        return False
+
 def CreateConstraints():
     
     constraintPairs=[]
@@ -54,13 +78,13 @@ def CreateConstraints():
                 squareVariables.append(rows[3*i]+str(3*j+k))
                 squareVariables.append(rows[3*i+1]+str(3*j+k))
                 squareVariables.append(rows[3*i+2]+str(3*j+k))
-            print(squareVariables)
+            # print(squareVariables)
             for var1 in squareVariables:
                 for var2 in squareVariables:
                     if var1!=var2 and [var1,var2] not in constraintPairs:
                         constraintPairs.append([var1,var2])
 
-    print("There are 81 Variables.\nThere are "+ str(len(constraintPairs))+ " Arcs")
+    # print("There are 81 Variables.\nThere are "+ str(len(constraintPairs))+ " Arcs")
     return constraintPairs
 
 
@@ -75,9 +99,9 @@ def main():
     data = "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
     
     x = AC3(data,CreateConstraints())
-    
-    #print(x.variables)
-    #print(x.values)
+    print(x.ac3())
+    # print(x.related_cells)
+    print(x.values)
 
 if __name__ == "__main__":
     main()
