@@ -130,6 +130,18 @@ class BacktrackSearch:
         return False
 
 def main():
+    file = open(argv[1], "r")
+    inputArray = file.readlines()
+    puzzleIndex = 0
+    puzzles = []
+    for line in inputArray:
+        if line!="":
+            puzzles[puzzleIndex].append(line)
+        else:
+            puzzleIndex+=1
+
+
+
     # data = input("enter 81 length string: ")
     # if len(data) != 81 or data.isdigit()==False:
     #     print("wrong input")
@@ -137,7 +149,7 @@ def main():
 
     # data = "026000378058637400047000561000720900000308250802000010469501000001900740030040090"
 
-    data = "000020600900005001001806400008102900700000008006708200002609500800200009005010000"
+    data = puzzles[0]
     
     # data = "020000003600031000500000084370000501000060009000400000000007800200090040050200100"
     
