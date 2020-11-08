@@ -133,44 +133,42 @@ def main():
     file = open(argv[1], "r")
     inputArray = file.readlines()
     puzzleIndex = 0
-    puzzles = []
+    puzzles = [""]*10
     for line in inputArray:
+        line=line.strip()
         if line!="":
-            puzzles[puzzleIndex].append(line)
+            puzzles[puzzleIndex]+=line
+            
         else:
+            puzzles.append([])
             puzzleIndex+=1
-
-
-
-    # data = input("enter 81 length string: ")
-    # if len(data) != 81 or data.isdigit()==False:
-    #     print("wrong input")
-    #     return 0
-
+            print(puzzleIndex)
     # data = "026000378058637400047000561000720900000308250802000010469501000001900740030040090"
-
-    data = puzzles[0]
     
-    # data = "020000003600031000500000084370000501000060009000400000000007800200090040050200100"
-    
-    # The "world's hardest Sudoku"
-    # https://puzzling.stackexchange.com/questions/252/how-do-i-solve-the-worlds-hardest-sudoku
-    # data = "800000000003600000070090200050007000000045700000100030001000068008500010090000400"
+    for i in range(puzzleIndex+1):
+        data = puzzles[i]
+        print("solving:")
+        for index in range(9):
+            print(str(inputArray[i*10+index]).strip())
 
-    # data = "0"*81
+        # data = "020000003600031000500000084370000501000060009000400000000007800200090040050200100"
+        
+        # The "world's hardest Sudoku"
+        # https://puzzling.stackexchange.com/questions/252/how-do-i-solve-the-worlds-hardest-sudoku
+        # data = "800000000003600000070090200050007000000045700000100030001000068008500010090000400"
 
-    x = AC3(data,CreateConstraints())
-    x.ac3()
-    # print(x.related_cells)
-    x.printInFormat()
-    if (x.find_unsolved_square() is None):
-        print('solved')
-        x.printInFormat()  
-    else:
-        print("backtracking")
-        search = BacktrackSearch(x)
-        solution = search.backtrack_search()
-        solution.printInFormat()
+
+        x = AC3(data,CreateConstraints())
+        x.ac3()
+        #x.printInFormat()
+        if (x.find_unsolved_square() is None):
+            print('solved')
+            x.printInFormat()  
+        else:
+            print("backtracking")
+            search = BacktrackSearch(x)
+            solution = search.backtrack_search()
+            solution.printInFormat()
 
 if __name__ == "__main__":
     main()
