@@ -1,4 +1,5 @@
 from copy import deepcopy
+from sys import argv
 
 rows =['A','B','C','D','E','F','G','H','I']
 class AC3:
