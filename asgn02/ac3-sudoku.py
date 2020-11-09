@@ -100,7 +100,6 @@ def CreateConstraints():
                     if var1!=var2 and [var1,var2] not in constraintPairs:
                         constraintPairs.append([var1,var2])
 
-    # print("There are 81 Variables.\nThere are "+ str(len(constraintPairs))+ " Arcs")
     return constraintPairs
 
 
@@ -142,33 +141,28 @@ def main():
         else:
             puzzles.append([])
             puzzleIndex+=1
-            print(puzzleIndex)
-    # data = "026000378058637400047000561000720900000308250802000010469501000001900740030040090"
-    
     for i in range(puzzleIndex+1):
         data = puzzles[i]
-        print("solving:")
+        print("\nsolving:")
         for index in range(9):
             print(str(inputArray[i*10+index]).strip())
-
-        # data = "020000003600031000500000084370000501000060009000400000000007800200090040050200100"
-        
-        # The "world's hardest Sudoku"
-        # https://puzzling.stackexchange.com/questions/252/how-do-i-solve-the-worlds-hardest-sudoku
-        # data = "800000000003600000070090200050007000000045700000100030001000068008500010090000400"
-
-
         x = AC3(data,CreateConstraints())
-        x.ac3()
-        #x.printInFormat()
-        if (x.find_unsolved_square() is None):
-            print('solved')
-            x.printInFormat()  
+        solvable = x.ac3()
+        if solvable:
+            if (x.find_unsolved_square() is None):
+                print('solved')
+                x.printInFormat()  
+            else:
+                print("backtracking")
+                search = BacktrackSearch(x)
+                solution = search.backtrack_search()
+                if (solution):
+                    print("Solved")
+                    solution.printInFormat()
+                else:
+                    print("Puzzle Cannot be Solved\n")
         else:
-            print("backtracking")
-            search = BacktrackSearch(x)
-            solution = search.backtrack_search()
-            solution.printInFormat()
+            print("Puzzle Cannot be Solved\n")
 
 if __name__ == "__main__":
     main()
