@@ -71,6 +71,7 @@ class AC3:
                 return item[0]
         return None     
 
+    # Returns the unassigned cell with the least remaining possible values
     def minimum_remaining_values(self):
         mrv = None
         for item in self.values.items():
@@ -86,6 +87,7 @@ class AC3:
                 mrv = item[0]
         return mrv
 
+    # Returns the list of possible assignments for the mrv in order of least to most impact to the mrv's neighbours
     def least_constraining_value(self, mrv):
         values = self.values.get(mrv)
         lcv_index = {}
