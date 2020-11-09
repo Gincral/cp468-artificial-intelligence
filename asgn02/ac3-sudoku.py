@@ -1,4 +1,5 @@
 from copy import deepcopy
+import heapq
 
 rows =['A','B','C','D','E','F','G','H','I']
 class AC3:
@@ -67,7 +68,44 @@ class AC3:
         for item in self.values.items():
             if len(item[1]) > 1:
                 return item[0]
-        return None        
+        return None     
+
+    def minimum_remaining_values(self):
+        mrv_list = []
+        mrv = None
+        for item in self.values.items():
+            if len(item[1]) == 0:
+                return False
+            # elif len(mrv) == 0 and len(item[1]) > 1:
+                # print('new mrv: ' + item[0])
+                # print(str(len(item[1])))
+                # mrv = item[0]
+            elif mrv is None and len(item[1]) > 1:
+                mrv = item[0]
+            elif mrv is not None and len(item[1]) > 1 and len(item[1]) == len(self.values.get(mrv)):
+                # print('update mrv: ' + item[0])
+                mrv = item[0]
+            elif mrv is not None and len(item[1]) > 1 and len(item[1]) < len(self.values.get(mrv)):
+                # print('update mrv: ' + item[0])
+                mrv = item[0]
+        return mrv
+
+    def degree_search(self, mrv_list):
+        highest_degree = 0
+        selected = None
+        for mrv in mrv_list:
+            mrv_degree = 0
+            for value in self.values:
+                if mrv in value.values():
+                    mrv_degree += 1
+            if mrv_degree > highest_degree:
+                highest_degree = mrv_degree
+                selected = mrv
+        return selected
+    
+    
+    def idk(self, k):
+        return len(self.values.get(k)) > 1
 
 def CreateConstraints():
 
@@ -111,8 +149,20 @@ class BacktrackSearch:
         return self.backtrack(self.partial_assignment)
     
     def backtrack(self, possible_solution):
-        unsolved = possible_solution.find_unsolved_square()
-        if unsolved is None:
+        # MRV implementation
+        unsolved = possible_solution.minimum_remaining_values()
+        # MRV v2 implementation
+        # print('Unsolved:')
+        # print('key = ' + unsolved)
+        # print('------------------------------')
+        # print(possible_solution.printInFormat())
+        # print('------------------------------')
+        # print('value = ' + str(possible_solution.values[unsolved]))
+        # # Uninformed implementation
+        # unsolved = possible_solution.find_unsolved_square()
+        if unsolved is False:
+            return False
+        elif unsolved is None:
             return possible_solution
         # TODO: create a getter for values
         unsolved_domain = possible_solution.values[unsolved]
@@ -120,7 +170,8 @@ class BacktrackSearch:
         for value in unsolved_domain:
             solution = AC3(deepcopy(possible_solution.values), CreateConstraints())
             solution.values[unsolved] = [value]
-            # If the value did not result in an inconsistency, go to the next unassigned square
+            # print('TRY WITH: ' + str(solution.values[unsolved]))
+            # If the value did not result in an inconsistency, check for the next unassigned square
             if solution.ac3():
                 result = self.backtrack(solution)
                 if result is not False:
@@ -136,13 +187,13 @@ def main():
 
     # data = "026000378058637400047000561000720900000308250802000010469501000001900740030040090"
 
-    data = "000020600900005001001806400008102900700000008006708200002609500800200009005010000"
+    # data = "000020600900005001001806400008102900700000008006708200002609500800200009005010000"
     
     # data = "020000003600031000500000084370000501000060009000400000000007800200090040050200100"
     
     # The "world's hardest Sudoku"
     # https://puzzling.stackexchange.com/questions/252/how-do-i-solve-the-worlds-hardest-sudoku
-    # data = "800000000003600000070090200050007000000045700000100030001000068008500010090000400"
+    data = "800000000003600000070090200050007000000045700000100030001000068008500010090000400"
 
     # data = "0"*81
 
