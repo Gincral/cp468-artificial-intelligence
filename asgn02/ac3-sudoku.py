@@ -1,10 +1,11 @@
 from copy import deepcopy
 import heapq
+import numpy as np
+import matplotlib.pyplot as plt
 from sys import argv
-
 rows =['A','B','C','D','E','F','G','H','I']
 class AC3:
-
+    puzzleNum=0
     def __init__(self, data,constraints):
         self.binConstraints=constraints
         self.values={}
@@ -37,8 +38,28 @@ class AC3:
 
         self.related_cells=related_cells
 
-    def ac3(self):
+    def ac3(self,graph=False):
+        xDat=[]
+        yDat=[]
+        step=0
+        if graph:
+            plt.ion()
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            line1, = ax.plot(xDat, yDat, 'b-')
+            plt.title("Arc Queue Length Puzzle: "+str(self.puzzleNum))
+            plt.xlabel('Step Number')
+            plt.ylabel("Queue Length")
         while len(self.binConstraints) > 0:
+            xDat.append(step)
+            step+=1
+            yDat.append(len(self.binConstraints))
+            if graph and step%100==0:
+                line1.set_xdata(xDat)
+                line1.set_ydata(yDat)
+                ax.relim()# update ax.viewLim using the new dataLim
+                ax.autoscale_view()
+                fig.canvas.draw()
             arc = self.binConstraints.pop(0)
             x = arc[0]
             y = arc[1]
@@ -48,6 +69,12 @@ class AC3:
                 for cell in self.related_cells[x]:
                     if [cell, x] not in self.binConstraints:
                         self.binConstraints.append([cell,x])
+        if graph:
+                line1.set_xdata(xDat)
+                line1.set_ydata(yDat)
+                ax.relim()# update ax.viewLim using the new dataLim
+                ax.autoscale_view()
+                fig.canvas.draw()
         return True
 
     def revise(self, x, y):
@@ -142,7 +169,8 @@ class BacktrackSearch:
         # # ---- Uninformed implementation ----
         # unsolved = possible_solution.find_unsolved_square()
         self.nodes_expanded += 1
-        print('nodes expanded: ' + str(self.nodes_expanded))
+        if self.nodes_expanded%100==0:
+            print('nodes expanded: ' + str(self.nodes_expanded))
         if unsolved is False:
             return False
         elif unsolved is None:
@@ -158,7 +186,7 @@ class BacktrackSearch:
             solution = AC3(deepcopy(possible_solution.values), CreateConstraints())
             solution.values[unsolved] = [value]
             # If the value did not result in an inconsistency, check for the next unassigned square
-            if solution.ac3():
+            if solution.ac3(graph=False):
                 result = self.backtrack(solution)
                 if result is not False:
                     return result
@@ -184,22 +212,25 @@ def main():
         for index in range(9):
             print(str(inputArray[i*10+index]).strip())
         x = AC3(data,CreateConstraints())
-        solvable = x.ac3()
+        x.puzzleNum=i+1
+        solvable = x.ac3(graph=True)
         if solvable:
             if (x.find_unsolved_square() is None):
-                print('solved')
+                print('Solved by AC-3')
                 x.printInFormat()  
             else:
                 print("backtracking")
                 search = BacktrackSearch(x)
                 solution = search.backtrack_search()
                 if (solution):
-                    print("Solved")
+                    print("Solved by AC-3 and BackTracking")
                     solution.printInFormat()
                 else:
                     print("Puzzle Cannot be Solved\n")
         else:
             print("Puzzle Cannot be Solved\n")
+            
 
 if __name__ == "__main__":
     main()
+    input("Hit enter if Finished")
