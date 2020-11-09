@@ -99,6 +99,7 @@ class AC3:
         return None     
 
     # Returns the unassigned cell with the least remaining possible values
+    # If every variable is assigned, returns None
     def minimum_remaining_values(self):
         mrv = None
         for item in self.values.items():
@@ -110,7 +111,7 @@ class AC3:
                 mrv = item[0]
         return mrv
 
-    # Returns the list of possible assignments for the mrv in order of least to most impact to the mrv's neighbours
+    # Returns the list of possible assignments for the MRV in order of least to most impact to the MRV's neighbours
     def least_constraining_value(self, mrv):
         values = self.values.get(mrv)
         lcv_index = {}
@@ -164,25 +165,22 @@ class BacktrackSearch:
         return self.backtrack(self.partial_assignment)
     
     def backtrack(self, possible_solution):
-        # MRV implementation
+        # Selects a variable with the fewest remaining values
         unsolved = possible_solution.minimum_remaining_values()
-        # # ---- Uninformed implementation ----
-        # unsolved = possible_solution.find_unsolved_square()
         self.nodes_expanded += 1
         if self.nodes_expanded%100==0:
             print('nodes expanded: ' + str(self.nodes_expanded))
         if unsolved is False:
             return False
+        # If every variable has an assignment, return this solution
         elif unsolved is None:
             return possible_solution
-        # TODO: create a getter for values
-        # unsolved_domain = possible_solution.values[unsolved]
         
-        # # ---- MRV + LCV implementation ----
+        # Sorts the list of possible assignments in order of least to most constraining
         lcvs = possible_solution.least_constraining_value(unsolved)
         # For each possible assignment, try to solve the puzzle
         for value in lcvs:
-        # for value in unsolved_domain:
+            # Verify that the solution is still arc-consistent after assigning the current value
             solution = AC3(deepcopy(possible_solution.values), CreateConstraints())
             solution.values[unsolved] = [value]
             # If the value did not result in an inconsistency, check for the next unassigned square
