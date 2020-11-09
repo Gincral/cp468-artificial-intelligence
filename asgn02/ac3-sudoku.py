@@ -71,15 +71,10 @@ class AC3:
         return None     
 
     def minimum_remaining_values(self):
-        mrv_list = []
         mrv = None
         for item in self.values.items():
             if len(item[1]) == 0:
                 return False
-            # elif len(mrv) == 0 and len(item[1]) > 1:
-                # print('new mrv: ' + item[0])
-                # print(str(len(item[1])))
-                # mrv = item[0]
             elif mrv is None and len(item[1]) > 1:
                 mrv = item[0]
             elif mrv is not None and len(item[1]) > 1 and len(item[1]) == len(self.values.get(mrv)):
@@ -90,22 +85,16 @@ class AC3:
                 mrv = item[0]
         return mrv
 
-    def degree_search(self, mrv_list):
-        highest_degree = 0
-        selected = None
-        for mrv in mrv_list:
-            mrv_degree = 0
-            for value in self.values:
-                if mrv in value.values():
-                    mrv_degree += 1
-            if mrv_degree > highest_degree:
-                highest_degree = mrv_degree
-                selected = mrv
-        return selected
-    
-    
-    def idk(self, k):
-        return len(self.values.get(k)) > 1
+    def least_constraining_value(self, mrv):
+        values = self.values.get(mrv)
+        lcv_index = {}
+        for value in values:
+            lcv_index[value] = 0
+        for cell in self.related_cells.get(mrv):
+            for i in range(len(values)):
+                if values[i] in self.values.get(cell):
+                    lcv_index[values[i]] += 1
+        return sorted(lcv_index, key=lcv_index.get)
 
 def CreateConstraints():
 
@@ -151,14 +140,17 @@ class BacktrackSearch:
     def backtrack(self, possible_solution):
         # MRV implementation
         unsolved = possible_solution.minimum_remaining_values()
-        # MRV v2 implementation
+        # print('mrv = ')
+        # print(unsolved)
+        # print('unsolved domain = ')
+        # print(possible_solution.values[unsolved])
         # print('Unsolved:')
         # print('key = ' + unsolved)
         # print('------------------------------')
         # print(possible_solution.printInFormat())
         # print('------------------------------')
         # print('value = ' + str(possible_solution.values[unsolved]))
-        # # Uninformed implementation
+        # # ---- Uninformed implementation ----
         # unsolved = possible_solution.find_unsolved_square()
         if unsolved is False:
             return False
@@ -166,8 +158,13 @@ class BacktrackSearch:
             return possible_solution
         # TODO: create a getter for values
         unsolved_domain = possible_solution.values[unsolved]
+        # # ---- MRV + LCV implementation ----
+        lcvs = possible_solution.least_constraining_value(unsolved)
+        # print('lcvs =')
+        # print(lcvs)
         # For each possible assignment, try to solve the puzzle
-        for value in unsolved_domain:
+        for value in lcvs:
+        # for value in unsolved_domain:
             solution = AC3(deepcopy(possible_solution.values), CreateConstraints())
             solution.values[unsolved] = [value]
             # print('TRY WITH: ' + str(solution.values[unsolved]))
