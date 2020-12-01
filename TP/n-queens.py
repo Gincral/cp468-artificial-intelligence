@@ -63,7 +63,7 @@ class NQueens:
         for i in range(maxSteps):
             conflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
             sumCon=sum(conflicts)
-            if i%10==0:
+            if i%100==0:
                 print(sumCon)
             if sumCon == 0:
                 return True
@@ -73,7 +73,8 @@ class NQueens:
                     conflicting.append(i)
             position = conflicting[random.randrange(0, len(conflicting))]
             list = [self.conflicts(position, value) for value in range(self.size)]
-            n = random.choice([i for i in range(self.size) if list[i] == min(list)])
+            minimum=min(list)
+            n = random.choice([i for i in range(self.size) if list[i] == minimum])
             prev=self.puzzle[position]
             self.puzzle[position] = n
             self.queensRow[n]+=1
@@ -88,7 +89,7 @@ class NQueens:
 
 def main():
     # n = int(input("Enter the value of N: "))
-    nqueens = NQueens(1000)
+    nqueens = NQueens(100000)
     #nqueens.printPuzzle()
     if nqueens.minConflicts():
         print("solved")
