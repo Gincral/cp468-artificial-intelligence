@@ -62,7 +62,7 @@ class NQueens:
 
 def main():
     # n = int(input("Enter the value of N: "))
-    nqueens = NQueens(10)
+    nqueens = NQueens(100)
     nqueens.printPuzzle()
     if nqueens.minConflicts():
         nqueens.printPuzzle()

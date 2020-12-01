@@ -168,7 +168,7 @@ class BacktrackSearch:
         # Selects a variable with the fewest remaining values
         unsolved = possible_solution.minimum_remaining_values()
         self.nodes_expanded += 1
-        if self.nodes_expanded%100==0:
+        if self.nodes_expanded%100==0: ?
             print('nodes expanded: ' + str(self.nodes_expanded))
         if unsolved is False:
             return False
