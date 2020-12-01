@@ -52,7 +52,11 @@ class NQueens:
             conflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
             if sum(conflicts) == 0:
                 return True
-            position = random.randrange(0, self.size)
+            conflicting=[]
+            for i in range(len(conflicts)):
+                if conflicts[i]!=0:
+                    conflicting.append(i)
+            position = conflicting[random.randrange(0, len(conflicting))]
             list = [self.conflicts(position, value) for value in range(self.size)]
             n = random.choice([i for i in range(self.size) if list[i] == min(list)])
             self.puzzle[position] = n
