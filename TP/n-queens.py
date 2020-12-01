@@ -9,7 +9,7 @@ import random
 class NQueens:
     def __init__(self, n):
         self.size = n
-        self.puzzle = generatePuzzle()
+        self.puzzle = self.generatePuzzle()
 
     def generatePuzzle(self):
         nr = self.size
