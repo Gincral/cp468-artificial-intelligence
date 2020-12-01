@@ -6,17 +6,29 @@ from sys import argv
 import random
 
 class NQueens:
-    def __init__(self, n):
-        self.size = n
-        self.puzzle = list(range(n))
+    def __init__(self, nr):
+        self.size = nr
+        board=[0]*nr
+        if (nr%2==1 and nr%6!=3):
+            for i in range(nr//2+1):
+                board[i]=i*2
+                if (i!=nr//2):
+                    board[i+nr//2+1]=1+i*2
+        else:
+            
+            board[0]=random.randint(0,nr-1)
+            for i in range(nr//2):
+                board[i+1]=i*2
+            for i in range(nr//2,nr):
+                board[i]=random.randint(0,nr-1)
+        self.puzzle = board
 
     def printPuzzle(self):
         size = self.size
-        for i in range(size):
-            row = ['[ ]'] * size
-            for col in range(size):
-                if self.puzzle[col] == self.size - 1 - i:
-                    row[col] = '[Q]'
+        print(self.puzzle)
+        for col in range(size):
+            row = ['[ ]'] * size           
+            row[self.puzzle[col]] = '[Q]'
             print(''.join(row))
 
 class CSP:
