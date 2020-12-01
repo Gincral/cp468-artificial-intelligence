@@ -3,17 +3,21 @@ import heapq
 import numpy as np
 import matplotlib.pyplot as plt
 from sys import argv
-
+import random
 
 class NQueens:
-    def __init__(self, n, puzzle):
-        if puzzle == None:
-            self.puzzle = generatePuzzle(n)
-        else:
-            self.puzzle = puzzle
-    def generatePuzzle(size):
-        return None
+    def __init__(self, n):
+        self.size = n
+        self.puzzle = list(range(n))
 
+    def printPuzzle(self):
+        size = self.size
+        for i in range(size):
+            row = ['[ ]'] * size
+            for col in range(size):
+                if self.puzzle[col] == self.size - 1 - i:
+                    row[col] = '[Q]'
+            print(''.join(row))
 
 class CSP:
     def __init__(self, variables, domains, constraints):
@@ -26,10 +30,10 @@ class CSP:
 
 
 def main():
-    n = input("Enter the value of N: ")
-    puzzle = input("Enter the N-Queen puzzle: ")
-    nqueens = NQueens(n, puzzle);
+    n = int(input("Enter the value of N: "))
+    nqueens = NQueens(n)
+    nqueens.printPuzzle()
+    # print(nqueens.generatePuzzle(n));
 
 if __name__ == "__main__":
     main()
-    input("Hit enter if Finished")
