@@ -17,11 +17,12 @@ class NQueens:
     def generatePuzzle(self):
         nr = self.size
         board=[0]*nr
-        if (nr%2==1 and nr%6!=3):
+        if (nr%6!=2 and nr%6!=3):
             for i in range(nr//2+1):
-                board[i]=i*2
-                if (i!=nr//2):
-                    board[i+nr//2+1]=1+i*2
+                if i!=nr//2:
+                    board[i]=i*2+1
+                board[i+nr//2]=i*2
+                    
         else:
             
             board[0]=random.randint(0,nr-1)
@@ -34,13 +35,13 @@ class NQueens:
     def printPuzzle(self):
         print(self.puzzle)
         size = self.size
-        """for i in range(size):
+        for i in range(size):
             row = ['[ ]'] * size
             for col in range(size):
                 if self.puzzle[col] == i:
                     row[col] = '[Q]'
             print(''.join(row))
-            """
+            
 
     def conflicts(self, col, row):
         total = 0
@@ -55,7 +56,6 @@ class NQueens:
             self.queensRow[row]+=1
             self.queensDiag1[row+i]+=1
             self.queensDiag2[self.size-row+i]+=1
-
 
 
     def minConflicts(self, maxSteps=100000):
@@ -88,12 +88,12 @@ class NQueens:
 
 
 def main():
-    # n = int(input("Enter the value of N: "))
-    nqueens = NQueens(100000)
-    #nqueens.printPuzzle()
+    n = int(input("Enter the value of N: "))
+    nqueens = NQueens(n)
+    nqueens.printPuzzle()
     if nqueens.minConflicts():
         print("solved")
-        #nqueens.printPuzzle()
+        nqueens.printPuzzle()
     else:
         print("Puzzle cant be solved, try upper the iteraition")
 
