@@ -1,5 +1,6 @@
 from copy import deepcopy
 import heapq
+from more_itertools import locate
 import numpy as np
 import matplotlib.pyplot as plt
 from sys import argv
@@ -49,15 +50,12 @@ class NQueens:
     def minConflicts(self, maxSteps=1000):
         for i in range(maxSteps):
             conflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
-            print('conflict: ',conflicts)
             if sum(conflicts) == 0:
                 return True
-            position = random.randrange(0, 10)
-            print('random position: ',position)
+            position = random.randrange(0, self.size)
             list = [self.conflicts(position, value) for value in range(self.size)]
-            print(list)
-            self.puzzle[position] = list.index(min(list))
-            # print(self.puzzle)
+            n = random.choice([i for i in range(self.size) if list[i] == min(list)])
+            self.puzzle[position] = n
         return False
     
 
