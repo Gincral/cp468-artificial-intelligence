@@ -49,16 +49,15 @@ class NQueens:
     def minConflicts(self, maxSteps=1000):
         for i in range(maxSteps):
             conflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
-            print('sum: ', sum(conflicts))
+            print('conflict: ',conflicts)
             if sum(conflicts) == 0:
                 return True
             position = random.randrange(0, 10)
             print('random position: ',position)
             list = [self.conflicts(position, value) for value in range(self.size)]
             print(list)
-            minPosition = min(list)
-            self.puzzle[position] = list.index(minPosition)
-            print(self.puzzle)
+            self.puzzle[position] = list.index(min(list))
+            # print(self.puzzle)
         return False
     
 
