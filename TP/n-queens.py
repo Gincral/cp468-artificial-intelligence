@@ -11,11 +11,12 @@ class NQueens:
         self.puzzle = list(range(n))
 
     def printPuzzle(self):
+        print(self.puzzle)
         size = self.size
         for i in range(size):
             row = ['[ ]'] * size
             for col in range(size):
-                if self.puzzle[col] == self.size - 1 - i:
+                if self.puzzle[col] == i:
                     row[col] = '[Q]'
             print(''.join(row))
 
