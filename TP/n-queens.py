@@ -8,7 +8,24 @@ import random
 class NQueens:
     def __init__(self, n):
         self.size = n
-        self.puzzle = list(range(n))
+        self.puzzle = self.generatePuzzle()
+
+    def generatePuzzle(self):
+        nr = self.size
+        board=[0]*nr
+        if (nr%2==1 and nr%6!=3):
+            for i in range(nr//2+1):
+                board[i]=i*2
+                if (i!=nr//2):
+                    board[i+nr//2+1]=1+i*2
+        else:
+            
+            board[0]=random.randint(0,nr-1)
+            for i in range(nr//2):
+                board[i+1]=i*2
+            for i in range(nr//2,nr):
+                board[i]=random.randint(0,nr-1)
+        return board;
 
     def printPuzzle(self):
         print(self.puzzle)
