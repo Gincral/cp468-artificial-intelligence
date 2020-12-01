@@ -8,7 +8,7 @@ import random
 class NQueens:
     def __init__(self, n):
         self.size = n
-        self.puzzle = self.generatePuzzle()
+        self.puzzle = list(range(n))
 
     def generatePuzzle(self):
         nr = self.size
@@ -37,21 +37,40 @@ class NQueens:
                     row[col] = '[Q]'
             print(''.join(row))
 
-class CSP:
-    def __init__(self, variables, domains, constraints):
-        self.variables = variables
-        self.domains = domains
-        self.constraints = constraints
-        
-    def CreateConstraints():
-        return None
+    def conflicts(self, col, value):
+        total = 0
+        for i in range(self.size):
+            if i == col:
+                continue
+            if self.puzzle[i] == value or abs(i - col) == abs(self.puzzle[i] - value):
+                total += 1
+        return total
+
+    def minConflicts(self, maxSteps=1000):
+        for i in range(maxSteps):
+            conflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
+            print('sum: ', sum(conflicts))
+            if sum(conflicts) == 0:
+                return True
+            position = random.randrange(0, 10)
+            print('random position: ',position)
+            list = [self.conflicts(position, value) for value in range(self.size)]
+            print(list)
+            minPosition = min(list)
+            self.puzzle[position] = list.index(minPosition)
+            print(self.puzzle)
+        return False
+    
 
 
 def main():
-    n = int(input("Enter the value of N: "))
-    nqueens = NQueens(n)
+    # n = int(input("Enter the value of N: "))
+    nqueens = NQueens(10)
     nqueens.printPuzzle()
-    # print(nqueens.generatePuzzle(n));
+    if nqueens.minConflicts():
+        nqueens.printPuzzle()
+    else:
+        print("Puzzle cant be solved, try upper the iteraition")
 
 if __name__ == "__main__":
     main()
