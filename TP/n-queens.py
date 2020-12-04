@@ -28,7 +28,6 @@ class NQueens:
         return board
 
     def printPuzzle(self):
-        #print(self.puzzle)
         size = self.size
         for i in range(size):
             row = ['[ ]'] * size
@@ -46,8 +45,6 @@ class NQueens:
         total+=diag1Len-1
         diag2Len=len(self.diag2Ind[(self.size-row)+col])
         total+=diag2Len-1
-        #print("row ind:"+str(self.rowsInd[row]))
-        #print("col:"+str(col)+", "+str(rowLen)+" , "+ str(diag1Len)+" , "+str(diag2Len))
         return total
 
     def populateFrequencies(self):
@@ -64,11 +61,8 @@ class NQueens:
         self.allConflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
         for i in range(maxSteps):
             sumCon=sum(self.allConflicts)
-            if i%100==0 or sumCon<0:
-                print(sumCon)
-                #self.printPuzzle()
-            #print("Row indices before"+str(self.rowsInd))
-            #print(self.allConflicts)
+            # if i%100==0 or sumCon<0:
+            #     print(sumCon)
             if sumCon == 0:
                 return True
             conflicting=[]
@@ -119,20 +113,21 @@ class NQueens:
 
 def main():
     n = int(input("Enter the value of N: "))
-    times=[]
-    for i in range(100,n,100):
+    # times=[]
+    for i in range(4,n,1):
         nqueens = NQueens(i)
-        #nqueens.printPuzzle()
         start=time.time()
-        #print(start)
         if nqueens.minConflicts():
-            print("solved")
-            #nqueens.printPuzzle()
+            print("Solved! Number of queens: ", i)
+            print(nqueens.puzzle)
+            if(i< 30): nqueens.printPuzzle()
         else:
             print("Puzzle cant be solved, try upper the iteraition")
-        times.append(time.time()-start)
-    for i in range(len(times)):
-        print(str(5+200*i)+"-Queens took "+str(times[i])+"s")
+        # times.append(time.time()-start)
+        print(str(i)+"-Queens took "+str(time.time()-start))
+        print("\n")
+    # for i in range(len(times)):
+    #     print(str(i+4)+"-Queens took "+str(times[i])+"s")
 
 if __name__ == "__main__":
     main()
