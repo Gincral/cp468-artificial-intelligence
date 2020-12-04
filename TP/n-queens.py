@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sys import argv
 import random
+import csv
 
 class NQueens:
     def __init__(self, n):
@@ -29,12 +30,13 @@ class NQueens:
 
     def printPuzzle(self):
         size = self.size
-        for i in range(size):
-            row = ['[ ]'] * size
-            for col in range(size):
-                if self.puzzle[col] == i:
-                    row[col] = '[Q]'
-            print(''.join(row))
+        if size<16:
+            for i in range(size):
+                row = ['[ ]'] * size
+                for col in range(size):
+                    if self.puzzle[col] == i:
+                        row[col] = '[Q]'
+                print(''.join(row))
             
 
     def conflicts(self, col, row):
@@ -64,6 +66,9 @@ class NQueens:
             # if i%100==0 or sumCon<0:
             #     print(sumCon)
             if sumCon == 0:
+                with open('Steps.csv', 'a', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow([i,self.size])
                 return True
             conflicting=[]
             for col in range(self.size):
@@ -74,41 +79,32 @@ class NQueens:
             minimum=min(list)
             n = random.choice([i for i in range(self.size) if list[i] == minimum])
             prev=self.puzzle[position]
-            #self.printPuzzle()
-            
-            """print("diag 1 ind "+str(self.diag1Ind))
-               print("diag 2 ind "+str(self.diag2Ind))"""
             self.puzzle[position] = n
-            self.rowsInd[n].append(position)
-            self.rowsInd[prev].remove(position)
-            self.diag1Ind[n+position].append(position)
-            self.diag1Ind[prev+position].remove(position)
-            self.diag2Ind[(self.size-n)+position].append(position)
-            self.diag2Ind[(self.size-prev)+position].remove(position)
-            #self.printPuzzle()
-            #print("Row indices"+str(self.rowsInd))
-
-            """print("diag 1 ind "+str(self.diag1Ind))
-               print("diag 2 ind "+str(self.diag2Ind))"""
-           
-
-            for j in self.rowsInd[n]:
-                self.allConflicts[j]=self.conflicts(j,n)
-            for j in self.rowsInd[prev]:
-                self.allConflicts[j]=self.conflicts(j,prev)
-            for j in self.diag1Ind[position+n]:
-                self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
-            for j in self.diag1Ind[position+prev]:
-                self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
-            for j in self.diag2Ind[self.size-n+position]:
-                self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
-            for j in self.diag2Ind[self.size-prev+position]:
-                self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
-            #print(self.allConflicts)
-            #print("\n")
+            if prev!=n:
+                self.updateConflicts(prev,n,position)
             
         return False
-    
+        
+    def updateConflicts(self,prev,n,position):
+        self.rowsInd[n].append(position)
+        self.rowsInd[prev].remove(position)
+        self.diag1Ind[n+position].append(position)
+        self.diag1Ind[prev+position].remove(position)
+        self.diag2Ind[(self.size-n)+position].append(position)
+        self.diag2Ind[(self.size-prev)+position].remove(position)
+
+        for j in self.rowsInd[n]:
+            self.allConflicts[j]=self.conflicts(j,n)
+        for j in self.rowsInd[prev]:
+            self.allConflicts[j]=self.conflicts(j,prev)
+        for j in self.diag1Ind[position+n]:
+            self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
+        for j in self.diag1Ind[position+prev]:
+            self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
+        for j in self.diag2Ind[self.size-n+position]:
+            self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
+        for j in self.diag2Ind[self.size-prev+position]:
+            self.allConflicts[j]=self.conflicts(j,self.puzzle[j])
 
 
 def main():
@@ -124,10 +120,12 @@ def main():
         else:
             print("Puzzle cant be solved, try upper the iteraition")
         # times.append(time.time()-start)
-        print(str(i)+"-Queens took "+str(time.time()-start))
+        end=time.time()-start
+        print(str(i)+"-Queens took "+str(end))
         print("\n")
-    # for i in range(len(times)):
-    #     print(str(i+4)+"-Queens took "+str(times[i])+"s")
+        with open('output.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([end, i])
 
 if __name__ == "__main__":
     main()
