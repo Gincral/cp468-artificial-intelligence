@@ -109,23 +109,34 @@ class NQueens:
 
 def main():
     n = int(input("Enter the value of N: "))
-    # times=[]
-    for i in range(4,n,1):
-        nqueens = NQueens(i)
-        start=time.time()
-        if nqueens.minConflicts():
-            print("Solved! Number of queens: ", i)
-            print(nqueens.puzzle)
-            if(i< 30): nqueens.printPuzzle()
+    if n == 0:
+        puzzle = input("Enter the puzzle: ").split(" ")
+        puzzle = [ int(x) for x in puzzle ]
+        nqueens = NQueens(len(puzzle))
+        nqueens.puzzle = puzzle
+        nqueens.populateFrequencies()
+        con = [nqueens.conflicts(i, nqueens.puzzle[i]) for i in range(nqueens.size)]
+        print(con)
+        if sum(con) == 0:
+            print("this is an answer for", nqueens.size,"queens")
         else:
-            print("Puzzle cant be solved, try upper the iteraition")
-        # times.append(time.time()-start)
-        end=time.time()-start
-        print(str(i)+"-Queens took "+str(end))
-        print("\n")
-        with open('output.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([end, i])
+            print("this is not an answer for", nqueens.size,"queens")
+    else:
+        for i in range(4,n,1):
+            nqueens = NQueens(i)
+            start=time.time()
+            if nqueens.minConflicts():
+                print("Solved! Number of queens: ", i)
+                print(nqueens.puzzle)
+                if(i< 30): nqueens.printPuzzle()
+            else:
+                print("Puzzle cant be solved, try upper the iteraition")
+            end = time.time()-start
+            print(str(i)+"-Queens took "+str(end))
+            print("\n")
+            with open('output.csv', 'a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([end, i])
 
 if __name__ == "__main__":
     main()
