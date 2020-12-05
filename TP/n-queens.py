@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from sys import argv
 import random
 import csv
+import math
+from PIL import Image, ImageDraw
 
 class NQueens:
     def __init__(self, n):
@@ -37,7 +39,76 @@ class NQueens:
                     if self.puzzle[col] == i:
                         row[col] = '[Q]'
                 print(''.join(row))
+
+    # Creates and exports a visual representation of a chess board with the N-queens' solution
+    def exportPuzzle(self):
+        print("Exporting solution to queens-output.png...")
+        size = self.size
+        imgDimens = 1 + (50 * size)
+        if imgDimens > 10000:
+            imgDimens = 10000
+        cellSize = math.floor(imgDimens / size)
+
+        board = Image.new('RGBA', (imgDimens,imgDimens), (255,255,255,0))
+        draw = ImageDraw.Draw(board)
+
+        if self.size > 50:
+            self.exportPuzzleLarge(draw, cellSize)
+        else:
+            self.exportPuzzleSmall(draw, cellSize)
             
+        board.save('queens-output.png')
+        board.show()
+
+    # Draws a traditional chess board with the N-queens marked as red squares
+    def exportPuzzleSmall(self, draw, cellSize):
+        size = self.size
+        posX = 0
+        posY = 0
+        fill = (255,255,255)
+        for i in range(size):
+            for col in range(size):
+                if (i+col) % 2 == 0:
+                    fill = (255,255,255)
+                else:
+                    fill = (169,169,169)
+                # Draws a chess board tile
+                draw.rectangle(
+                    (posX, posY, posX + cellSize, posY + cellSize),
+                    fill=fill,
+                    outline=(169,169,169))
+                # Indicates the position of a queen on the board
+                if self.puzzle[col] == i:
+                    midX = math.ceil(posX + (cellSize / 4))
+                    midY = posY + (cellSize / 4)
+                    draw.rectangle(
+                        (midX, midY, math.ceil(midX + (cellSize / 2)), math.ceil(midY + (cellSize / 2))),
+                        fill=(255,0,0),
+                        outline=None)
+                posX += cellSize
+            posY += cellSize
+            posX = 0
+
+    # Draws a checkered board where the N-queens are marked as grey tiles
+    def exportPuzzleLarge(self, draw, cellSize):
+        size = self.size
+        posX = 0
+        posY = 0
+        fill = (255,255,255)
+        for i in range(size):
+            for col in range(size):
+                if self.puzzle[col] == i:
+                    fill = (169,169,169)
+                else:
+                    fill = (255,255,255)
+                # Draws a chess board tile
+                draw.rectangle(
+                    (posX, posY, posX + cellSize, posY + cellSize),
+                    fill=fill,
+                    outline=(169,169,169))
+                posX += cellSize
+            posY += cellSize
+            posX = 0
 
     def conflicts(self, col, row):
         total = 0
@@ -119,6 +190,7 @@ def main():
         print(con)
         if sum(con) == 0:
             print("this is an answer for", nqueens.size,"queens")
+            nqueens.exportPuzzle()
         else:
             print("this is not an answer for", nqueens.size,"queens")
     else:
@@ -137,6 +209,7 @@ def main():
             with open('output.csv', 'a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow([end, i])
+        nqueens.exportPuzzle()
 
 if __name__ == "__main__":
     main()
