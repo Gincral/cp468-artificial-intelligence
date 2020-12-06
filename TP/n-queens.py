@@ -60,7 +60,7 @@ class NQueens:
             self.exportPuzzleSmall(draw, cellSize)
             
         board.save('queens-output.png')
-        board.show()
+        print("Success")
 
     # Draws a traditional chess board with the N-queens marked as red squares
     def exportPuzzleSmall(self, draw, cellSize):
