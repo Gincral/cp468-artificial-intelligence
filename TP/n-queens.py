@@ -219,10 +219,9 @@ def main():
         end = time.time()-start
         print(str(n)+"-Queens took "+str(end))
         print("\n")
-        with open('output.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([end, n])
-        nqueens.exportPuzzle()
+        if n <= 50000:
+            nqueens.exportPuzzle()
+
 
 if __name__ == "__main__":
     main()
