@@ -45,11 +45,13 @@ class NQueens:
         print("Exporting solution to queens-output.png...")
         size = self.size
         imgDimens = 1 + (50 * size)
-        if imgDimens > 10000:
+        if self.size > 1000:
+            imgDimens = self.size
+        elif imgDimens > 10000:
             imgDimens = 10000
         cellSize = math.floor(imgDimens / size)
 
-        board = Image.new('RGBA', (imgDimens,imgDimens), (255,255,255,0))
+        board = Image.new('RGB', (imgDimens,imgDimens))
         draw = ImageDraw.Draw(board)
 
         if self.size > 50:
@@ -89,26 +91,38 @@ class NQueens:
             posY += cellSize
             posX = 0
 
-    # Draws a checkered board where the N-queens are marked as grey tiles
+    # Draws a checkered board where the N-queens are marked as grey tiles (n <= 1000) on a white background
+    # For n > 1000, N-queens are marked as white pixels on a black background
     def exportPuzzleLarge(self, draw, cellSize):
         size = self.size
         posX = 0
         posY = 0
-        fill = (255,255,255)
-        for i in range(size):
-            for col in range(size):
-                if self.puzzle[col] == i:
-                    fill = (169,169,169)
-                else:
-                    fill = (255,255,255)
-                # Draws a chess board tile
+        if size > 1000:
+            outline = None
+            fill = (255,255,255)
+            for i in range(len(self.puzzle)):
+                posX = cellSize * i
+                posY = cellSize * self.puzzle[i]
                 draw.rectangle(
                     (posX, posY, posX + cellSize, posY + cellSize),
                     fill=fill,
-                    outline=(169,169,169))
-                posX += cellSize
-            posY += cellSize
-            posX = 0
+                    outline=outline)
+        else: 
+            outline = (169,169,169)
+            for i in range(size):
+                for col in range(size):
+                    if self.puzzle[col] == i:
+                        fill = (169,169,169)
+                    else:
+                        fill = (255,255,255)
+                    # Draws a chess board tile
+                    draw.rectangle(
+                        (posX, posY, posX + cellSize, posY + cellSize),
+                        fill=fill,
+                        outline=outline)
+                    posX += cellSize
+                posY += cellSize
+                posX = 0
 
     def conflicts(self, col, row):
         total = 0
@@ -194,21 +208,20 @@ def main():
         else:
             print("this is not an answer for", nqueens.size,"queens")
     else:
-        for i in range(4,n,1):
-            nqueens = NQueens(i)
-            start=time.time()
-            if nqueens.minConflicts():
-                print("Solved! Number of queens: ", i)
-                print(nqueens.puzzle)
-                if(i< 30): nqueens.printPuzzle()
-            else:
-                print("Puzzle cant be solved, try upper the iteraition")
-            end = time.time()-start
-            print(str(i)+"-Queens took "+str(end))
-            print("\n")
-            with open('output.csv', 'a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([end, i])
+        nqueens = NQueens(n)
+        start=time.time()
+        if nqueens.minConflicts():
+            print("Solved! Number of queens: ", n)
+            print(nqueens.puzzle)
+            if(n< 30): nqueens.printPuzzle()
+        else:
+            print("Puzzle cant be solved, try upper the iteraition")
+        end = time.time()-start
+        print(str(n)+"-Queens took "+str(end))
+        print("\n")
+        with open('output.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([end, n])
         nqueens.exportPuzzle()
 
 if __name__ == "__main__":
