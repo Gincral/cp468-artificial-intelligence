@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw
 class NQueens:
     def __init__(self, n):
         self.size = n
-        self.puzzle = self.generatePuzzle()
+        # self.puzzle = self.generate()
         self.queensRow=[0]*n
         self.rowsInd=[[] for j in range(self.size)] 
         self.diag1Ind=[[] for j in range(self.size*2+2)] 
@@ -29,6 +29,19 @@ class NQueens:
         for i in range(nr//2,nr):
             board[i]=random.randint(0,nr-1)
         return board
+
+    def generate(self):
+        nr = self.size
+        board=[0]*nr
+        self.puzzle = board
+        self.populateFrequencies
+        for i in range(nr):
+            list = [self.conflicts(i, value) for value in range(self.size)]
+            minimum=min(list)
+            n = random.choice([i for i in range(self.size) if list[i] == minimum])
+            self.puzzle[i] = n
+            self.populateFrequencies
+
 
     def printPuzzle(self):
         size = self.size
@@ -209,6 +222,7 @@ def main():
             print("this is not an answer for", nqueens.size,"queens")
     else:
         nqueens = NQueens(n)
+        nqueens.generate()
         start=time.time()
         if nqueens.minConflicts():
             print("Solved! Number of queens: ", n)
@@ -219,8 +233,8 @@ def main():
         end = time.time()-start
         print(str(n)+"-Queens took "+str(end))
         print("\n")
-        if n <= 50000:
-            nqueens.exportPuzzle()
+        # if n <= 50000:
+        #     nqueens.exportPuzzle()
 
 
 if __name__ == "__main__":
