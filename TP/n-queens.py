@@ -34,13 +34,20 @@ class NQueens:
         nr = self.size
         board=[0]*nr
         self.puzzle = board
-        self.populateFrequencies
         for i in range(nr):
-            list = [self.conflicts(i, value) for value in range(self.size)]
+            list=[]
+            conflict= 10000000
+            value=0
+            while conflict !=0 and value < nr:
+                conflict = self.conflicts(i, value,False)
+                list.append(conflict)
+                value+=1
             minimum=min(list)
-            n = random.choice([i for i in range(self.size) if list[i] == minimum])
+            n = random.choice([i for i in range(len(list)) if list[i] == minimum])
             self.puzzle[i] = n
-            self.populateFrequencies
+            self.rowsInd[n].append(i)
+            self.diag1Ind[i+n].append(i)
+            self.diag2Ind[nr-n+i].append(i)
 
 
     def printPuzzle(self):
@@ -137,14 +144,16 @@ class NQueens:
                 posY += cellSize
                 posX = 0
 
-    def conflicts(self, col, row):
+    def conflicts(self, col, row, queenHere=True):
         total = 0
         rowLen=len(self.rowsInd[row])
-        total+=rowLen-1
+        total+=rowLen
         diag1Len = len(self.diag1Ind[row+col])
-        total+=diag1Len-1
+        total+=diag1Len
         diag2Len=len(self.diag2Ind[(self.size-row)+col])
-        total+=diag2Len-1
+        total+=diag2Len
+        if queenHere:
+            total-=3
         return total
 
     def populateFrequencies(self):
@@ -157,12 +166,11 @@ class NQueens:
 
 
     def minConflicts(self, maxSteps=100000):
-        self.populateFrequencies()
         self.allConflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
         for i in range(maxSteps):
             sumCon=sum(self.allConflicts)
-            # if i%100==0 or sumCon<0:
-            #     print(sumCon)
+            if i%100==0 or sumCon<0:
+                 print(sumCon)
             if sumCon == 0:
                 with open('Steps.csv', 'a', newline='') as file:
                     writer = csv.writer(file)
@@ -173,7 +181,7 @@ class NQueens:
                 if self.allConflicts[col]!=0:
                     conflicting.append(col)
             position = conflicting[random.randrange(0, len(conflicting))]
-            list = [self.conflicts(position, value) for value in range(self.size)]
+            list = [self.conflicts(position, value,False) for value in range(self.size)]
             minimum=min(list)
             n = random.choice([i for i in range(self.size) if list[i] == minimum])
             prev=self.puzzle[position]
@@ -221,16 +229,22 @@ def main():
         else:
             print("this is not an answer for", nqueens.size,"queens")
     else:
+        #for i in range(100,n,100)
         nqueens = NQueens(n)
         nqueens.generate()
+        #nqueens.printPuzzle()
         start=time.time()
         if nqueens.minConflicts():
             print("Solved! Number of queens: ", n)
             print(nqueens.puzzle)
+
             if(n< 30): nqueens.printPuzzle()
         else:
             print("Puzzle cant be solved, try upper the iteraition")
         end = time.time()-start
+        with open('Output.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([i,self.size])
         print(str(n)+"-Queens took "+str(end))
         print("\n")
         # if n <= 50000:
