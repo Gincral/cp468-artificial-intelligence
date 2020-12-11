@@ -13,7 +13,6 @@ from PIL import Image, ImageDraw
 class NQueens:
     def __init__(self, n):
         self.size = n
-        # self.puzzle = self.generate()
         self.queensRow=[0]*n
         self.rowsInd=[[] for j in range(self.size)] 
         self.diag1Ind=[[] for j in range(self.size*2+2)] 
@@ -30,7 +29,7 @@ class NQueens:
             board[i]=random.randint(0,nr-1)
         return board
 
-    def generate(self):
+    def minConflictIncremental(self):
         nr = self.size
         board=[0]*nr
         self.puzzle = board
@@ -169,8 +168,6 @@ class NQueens:
         self.allConflicts = [self.conflicts(col, self.puzzle[col]) for col in range(self.size)] 
         for i in range(maxSteps):
             sumCon=sum(self.allConflicts)
-            if i%100==0 or sumCon<0:
-                 print(sumCon)
             if sumCon == 0:
                 with open('Steps.csv', 'a', newline='') as file:
                     writer = csv.writer(file)
@@ -229,26 +226,25 @@ def main():
         else:
             print("this is not an answer for", nqueens.size,"queens")
     else:
-        #for i in range(100,n,100)
-        nqueens = NQueens(n)
-        nqueens.generate()
-        #nqueens.printPuzzle()
         start=time.time()
+        nqueens = NQueens(n)
+        nqueens.minConflictIncremental()
+        nqueens.printPuzzle()
+        
         if nqueens.minConflicts():
             print("Solved! Number of queens: ", n)
             print(nqueens.puzzle)
-
             if(n< 30): nqueens.printPuzzle()
         else:
             print("Puzzle cant be solved, try upper the iteraition")
         end = time.time()-start
         with open('Output.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([i,self.size])
+            writer.writerow([nqueens.size,end])
         print(str(n)+"-Queens took "+str(end))
         print("\n")
-        # if n <= 50000:
-        #     nqueens.exportPuzzle()
+        if n <= 50000:
+            nqueens.exportPuzzle()
 
 
 if __name__ == "__main__":
